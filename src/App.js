@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 export default class App extends Component {
 
   render() {
+    // console.log(process.env.REACT_DEMO_ENV)
     return (
       <Router>
         <Navbar cntry={this.countryHandler}/>

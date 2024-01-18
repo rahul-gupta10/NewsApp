@@ -1,28 +1,30 @@
 import React, { Component } from "react";
 import Newsitem from "./Newsitem";
 import Loader from "./Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class Newscontainer extends Component {
   static defaultProps = {
     category: "general",
-    apiKey: "2888afe3a4a846e991b59d23a343df31",
-    cntry: "in",
+    apiKey: "38fb55c8a2a146e5bbee01fb12808996",
   };
+
   constructor() {
     super();
     this.state = {
       article: [],
       loading: false,
       page: 1,
-      pageSize: 9,
+      pageSize: 10,
       totalResut: 0,
       newItem: 0,
+      contry:"in"
     };
   }
 
   async newsfetch() {
     this.setState({ loading: true });
-    const Apiurl = `https://newsapi.org/v2/top-headlines?country=${this.props.cntry}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pagesize=${this.state.pageSize}`;
+    const Apiurl = `https://newsapi.org/v2/top-headlines?country=${this.state.contry}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pagesize=${this.state.pageSize}`;
     let data = await fetch(Apiurl);
     let parseData = await data.json();
     if (parseData.status === "ok") {
@@ -35,25 +37,39 @@ export default class Newscontainer extends Component {
       this.setState({ loading: false, message: parseData.message });
     }
   }
+
   async componentDidMount() {
     this.newsfetch();
   }
 
-  prehandler = async () => {
-    document.getElementById("pre").setAttribute("disabled", "true");
-    await this.setState({ page: this.state.page - 1 });
-    this.newsfetch();
-    document.getElementById("pre").removeAttribute("disabled");
-  };
-  nexthandler = async () => {
-    document.getElementById("next").setAttribute("disabled", "true");
-    await this.setState({ page: this.state.page + 1 });
-    this.newsfetch();
-    document.getElementById("next").removeAttribute("disabled");
-  };
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+  fetchMoreData= async() =>{
+    this.setState({page:this.state.page+1})
+    const Apiurl = `https://newsapi.org/v2/top-headlines?country=${this.state.contry}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page+1}&pagesize=${this.state.pageSize}`;
+    let data = await fetch(Apiurl);
+    let parseData = await data.json();
+    this.setState({
+      article : this.state.article.concat(parseData.articles)
+    })
+    
+  }
+
+  
   render() {
     return (
+      <InfiniteScroll
+          dataLength={this.state.article.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.article.length+1 < this.state.totalResut}
+          loader={<Loader/>}
+        >
       <div className="container my-4">
+      <div className="text-center">
+        <h2>Top {this.capitalizeFirstLetter(this.props.category)} Headlines.</h2>
+      </div>
         {this.state.loading && <Loader />}
         <div className="row">
           {this.state.message ? this.state.message :
@@ -72,42 +88,8 @@ export default class Newscontainer extends Component {
             })}
 
         </div>
-        <div className="container d-flex justify-content-evenly my-3">
-          <button
-            id="pre"
-            disabled={this.state.page === 1}
-            className="btn btn-primary"
-            onClick={this.prehandler}
-          >
-            &larr; Previous
-          </button>
-          <p>
-            {Math.ceil(this.state.totalResut / this.state.pageSize) >
-              this.state.page
-              ? this.state.page * this.state.pageSize - this.state.pageSize + 1
-              : this.state.totalResut +
-              1 -
-              (this.state.totalResut % this.state.pageSize)}
-            -
-            {Math.ceil(this.state.totalResut / this.state.pageSize) >
-              this.state.page
-              ? this.state.pageSize * this.state.page
-              : this.state.totalResut}{" "}
-            out of {this.state.totalResut}
-          </p>
-          <button
-            id="next"
-            disabled={
-              this.state.page + 1 >
-              Math.ceil(this.state.totalResut / this.state.pageSize)
-            }
-            className="btn btn-primary"
-            onClick={this.nexthandler}
-          >
-            Next &rarr;
-          </button>
-        </div>
       </div>
+      </InfiniteScroll>
     );
   }
 }

@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import  { Link }  from "react-router-dom";
 
 export default class Navbar extends Component {
+
   render() {
     return (
       <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-            <Link className="navbar-brand" to="/">NewApp</Link>
+            <Link className="navbar-brand" to="/">NewsApp</Link>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
             </button>
@@ -30,10 +31,10 @@ export default class Navbar extends Component {
                 Country
               </p>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><Link className="dropdown-item"   to="/in">Bharat</Link></li>
-                <li><Link className="dropdown-item" to="/us">America</Link></li>
-                <li><Link className="dropdown-item" to="/il">Israel</Link></li>
-                <li><Link className="dropdown-item" to="/ru">Russia</Link></li>
+              <li><a className="dropdown-item"   onClick={()=>{this.cntryhandler("in")}}>Bharat</a></li>
+                <li><a className="dropdown-item" onClick={()=>{this.cntryhandler("us")}}>America</a></li>
+                <li><a className="dropdown-item" onClick={()=>{"il"}}>Israel</a></li>
+                <li><a className="dropdown-item" onClick={()=>{"ru"}}>Russia</a></li>
               </ul>
               </li>
             </div> */}
