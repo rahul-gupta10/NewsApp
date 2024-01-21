@@ -33,6 +33,7 @@ export default class Newscontainer extends Component {
         totalResut: parseData.totalResults,
         loading: false,
       });
+      document.title="News App- Total result "+this.state.totalResut
     } else {
       this.setState({ loading: false, message: parseData.message });
     }
@@ -82,6 +83,7 @@ export default class Newscontainer extends Component {
                     title={element.title}
                     newsurl={element.url}
                     publishedAt={element.publishedAt}
+                    source={element.source.name}
                   />
                 </div>
               );

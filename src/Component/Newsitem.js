@@ -5,7 +5,9 @@ export default class Newsitem extends Component {
     let {title, imgurl, desc, newsurl ,publishedAt} = this.props;
     return (
       <>
-      <div className="card cardDiv">
+      <div className="card cardDiv ">
+      <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+        {this.props.source}</span>
         <img src={imgurl?imgurl:"https://demofree.sirv.com/nope-not-here.jpg"} className="card-img-top" alt="Unable to load data" />
         <div className="card-body">
             <h5 className="card-title"><abbr title={title}>{title?title.slice(0,40):""}...</abbr></h5>            
